@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="6c8991c0d7c84ad9b426f0e5a0444e61" Name="Diagram1">
+        <EntityTypeShape EntityType="InstaDbModel.Comment" Width="1.5" PointX="3" PointY="5.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="InstaDbModel.Image" Width="1.5" PointX="6" PointY="5.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="InstaDbModel.Like" Width="1.5" PointX="10.5" PointY="4.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="InstaDbModel.Post" Width="1.5" PointX="0.75" PointY="5.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="InstaDbModel.PostTag" Width="1.5" PointX="3" PointY="13.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="InstaDbModel.Subscribtion" Width="1.5" PointX="10.5" PointY="8.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="InstaDbModel.User" Width="1.5" PointX="8.25" PointY="4.75" IsExpanded="true" />
+        <AssociationConnector Association="InstaDbModel.FK_Comments_Posts" ManuallyRouted="false" />
+        <AssociationConnector Association="InstaDbModel.FK_Comments_Users" ManuallyRouted="false" />
+        <AssociationConnector Association="InstaDbModel.FK_Images_Posts" ManuallyRouted="false" />
+        <AssociationConnector Association="InstaDbModel.FK_Images_Users" ManuallyRouted="false" />
+        <AssociationConnector Association="InstaDbModel.FK_Likes_Posts" ManuallyRouted="false" />
+        <AssociationConnector Association="InstaDbModel.FK_Likes_Users" ManuallyRouted="false" />
+        <AssociationConnector Association="InstaDbModel.FK_PostTags_Posts" ManuallyRouted="false" />
+        <AssociationConnector Association="InstaDbModel.FK_Subscribtions_Users" ManuallyRouted="false" />
+        <AssociationConnector Association="InstaDbModel.FK_Subscribtions_UsersFollowing" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

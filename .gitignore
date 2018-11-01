@@ -1,0 +1,7 @@
+InstaMvc/.vs/
+*.user
+InstaMvc/BLL/obj/
+InstaMvc/BLL/bin/
+InstaMvc/*/bin/
+InstaMvc/*/obj/
+InstaMvc/packages/
