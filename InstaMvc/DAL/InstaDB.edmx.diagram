@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="6c8991c0d7c84ad9b426f0e5a0444e61" Name="Diagram1">
+      <Diagram DiagramId="6c8991c0d7c84ad9b426f0e5a0444e61" Name="InstaDbDiagram">
         <EntityTypeShape EntityType="InstaDbModel.Comment" Width="1.5" PointX="3" PointY="5.5" IsExpanded="true" />
         <EntityTypeShape EntityType="InstaDbModel.Image" Width="1.5" PointX="6" PointY="5.375" IsExpanded="true" />
         <EntityTypeShape EntityType="InstaDbModel.Like" Width="1.5" PointX="10.5" PointY="4.625" IsExpanded="true" />
