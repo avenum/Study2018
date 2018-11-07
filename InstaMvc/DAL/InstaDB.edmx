@@ -153,6 +153,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Posts_Users">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="Posts" Type="Self.Posts" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Posts">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_PostTags_Posts">
           <End Role="Posts" Type="Self.Posts" Multiplicity="1" />
           <End Role="PostTags" Type="Self.PostTags" Multiplicity="*" />
@@ -220,6 +232,10 @@
           <AssociationSet Name="FK_Likes_Users" Association="Self.FK_Likes_Users">
             <End Role="Users" EntitySet="Users" />
             <End Role="Likes" EntitySet="Likes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Posts_Users" Association="Self.FK_Posts_Users">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Posts" EntitySet="Posts" />
           </AssociationSet>
           <AssociationSet Name="FK_PostTags_Posts" Association="Self.FK_PostTags_Posts">
             <End Role="Posts" EntitySet="Posts" />
@@ -289,6 +305,7 @@
           <NavigationProperty Name="Images" Relationship="Self.FK_Images_Posts" FromRole="Posts" ToRole="Images" />
           <NavigationProperty Name="Likes" Relationship="Self.FK_Likes_Posts" FromRole="Posts" ToRole="Likes" />
           <NavigationProperty Name="PostTags" Relationship="Self.FK_PostTags_Posts" FromRole="Posts" ToRole="PostTags" />
+          <NavigationProperty Name="User" Relationship="InstaDbModel.FK_Posts_Users" FromRole="Post" ToRole="User" />
         </EntityType>
         <EntityType Name="PostTag">
           <Key>
@@ -331,6 +348,7 @@
           <NavigationProperty Name="Followers" Relationship="Self.FK_Subscribtions_UsersFollowing" FromRole="Users" ToRole="Subscribtions" />
           <Property Name="AvatarContent" Type="Binary" MaxLength="Max" FixedLength="false" />
           <Property Name="AvatarMime" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Posts" Relationship="InstaDbModel.FK_Posts_Users" FromRole="User" ToRole="Post" />
         </EntityType>
         <Association Name="FK_Comments_Posts">
           <End Role="Posts" Type="Self.Post" Multiplicity="1" />
@@ -484,7 +502,23 @@
             <End Role="Users" EntitySet="Users" />
             <End Role="Subscribtions" EntitySet="Subscribtions" />
           </AssociationSet>
+          <AssociationSet Name="FK_Posts_Users" Association="InstaDbModel.FK_Posts_Users">
+            <End Role="User" EntitySet="Users" />
+            <End Role="Post" EntitySet="Posts" />
+          </AssociationSet>
         </EntityContainer>
+        <Association Name="FK_Posts_Users">
+          <End Type="InstaDbModel.User" Role="User" Multiplicity="1" />
+          <End Type="InstaDbModel.Post" Role="Post" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Post">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->

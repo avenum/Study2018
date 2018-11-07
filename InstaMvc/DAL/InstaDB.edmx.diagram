@@ -21,6 +21,7 @@
         <AssociationConnector Association="InstaDbModel.FK_PostTags_Posts" ManuallyRouted="false" />
         <AssociationConnector Association="InstaDbModel.FK_Subscribtions_Users" ManuallyRouted="false" />
         <AssociationConnector Association="InstaDbModel.FK_Subscribtions_UsersFollowing" ManuallyRouted="false" />
+        <AssociationConnector Association="InstaDbModel.FK_Posts_Users" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

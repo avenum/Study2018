@@ -22,6 +22,7 @@ namespace DAL
             this.Likes = new HashSet<Like>();
             this.Subscribtions = new HashSet<Subscribtion>();
             this.Followers = new HashSet<Subscribtion>();
+            this.Posts = new HashSet<Post>();
         }
     
         public long Id { get; set; }
@@ -46,5 +47,7 @@ namespace DAL
         public virtual ICollection<Subscribtion> Subscribtions { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Subscribtion> Followers { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Post> Posts { get; set; }
     }
 }
