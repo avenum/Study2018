@@ -15,4 +15,12 @@ namespace InstaMvc.Models
         [DataType(DataType.Password)]
         public string Password { get; set; }
     }
+
+    public class CustomSerializeModel
+    {
+        public long UserId { get; set; }
+        public string Nickname { get; set; }
+
+    }
+
 }

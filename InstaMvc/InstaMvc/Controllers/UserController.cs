@@ -1,9 +1,13 @@
-﻿using System;
+﻿using InstaMvc.CustomAuth;
+using InstaMvc.Models;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Security;
 
 namespace InstaMvc.Controllers
 {
@@ -48,30 +52,73 @@ namespace InstaMvc.Controllers
             return View(model);
         }
 
-        public ActionResult Login()
+        [HttpGet]
+        public ActionResult Login(string ReturnUrl = "")
         {
+            if (User.Identity.IsAuthenticated)
+            {
+                return LogOut();
+            }
+            ViewBag.ReturnUrl = ReturnUrl;
             return View();
         }
+
         [HttpPost]
-        public ActionResult Login(Models.LoginModel model)
+        public ActionResult Login(Models.LoginModel model, string ReturnUrl = "")
         {
 
-            var user = BLL.Data.GetUser(Login: model.Login);
+            if (ModelState.IsValid)
+            {
+                if (Membership.ValidateUser(model.Login, model.Password))
+                {
+                    var user = (CustomMembershipUser)Membership.GetUser(model.Login, false);
+                    if (user != null)
+                    {
+                        CustomSerializeModel userModel = new Models.CustomSerializeModel()
+                        {
+                            UserId = user.UserId,
+                            Nickname = user.Nickname,
+                        };
 
+                        string userData = JsonConvert.SerializeObject(userModel);
+                        FormsAuthenticationTicket authTicket = new FormsAuthenticationTicket
+                            (
+                            1, model.Login, DateTime.Now, DateTime.Now.AddMinutes(15), false, userData
+                            );
 
-            var salt = Convert.FromBase64String(user.Salt);
-            var passhash = BLL.Hash.GenerateSaltedHash(model.Password, salt);
+                        string enTicket = FormsAuthentication.Encrypt(authTicket);
+                        HttpCookie faCookie = new HttpCookie("Cookie1", enTicket);
+                        Response.Cookies.Add(faCookie);
+                    }
 
-            var oldHash = Convert.FromBase64String(user.PasswordHash);
+                    if (Url.IsLocalUrl(ReturnUrl))
+                    {
+                        return Redirect(ReturnUrl);
+                    }
+                    else
+                    {
+                        return RedirectToAction("Index", "Home");
+                    }
+                }
+            }
+            ModelState.AddModelError("", "Something Wrong : Username or Password invalid ^_^ ");
+            return View(model);
 
-            if (BLL.Hash.CompareByteArrays(passhash, oldHash))
-                ViewBag.Message = "Cool";
-            else
-                ViewBag.Message = "Bad";
+        }
+        public ActionResult LogOut()
+        {
+            HttpCookie cookie = new HttpCookie("Cookie1", "");
+            cookie.Expires = DateTime.Now.AddYears(-1);
+            Response.Cookies.Add(cookie);
 
+            FormsAuthentication.SignOut();
+            return RedirectToAction("Login", "User", null);
+        }
 
-
+        public ActionResult AccessDenied()
+        {
             return View();
         }
+
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using InstaMvc.CustomAuth;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -13,6 +14,12 @@ namespace InstaMvc.Controllers
         {
 
                 return View();
+        }
+        [Authorize]
+        public ActionResult Index2()
+        {
+            return View();
+
         }
     }
 }

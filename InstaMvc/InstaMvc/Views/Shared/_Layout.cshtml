@@ -20,11 +20,30 @@
                 @Html.ActionLink("Application name", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
             </div>
             <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                </ul>
+                <ul class="nav navbar-nav"></ul>
             </div>
         </div>
     </div>
+
+
+    <div id="header_container">
+        <div id="header">
+           
+            <span style="float:right; font-size:small">
+                @if (HttpContext.Current.User.Identity.IsAuthenticated)
+                {
+                    var identity = ((InstaMvc.CustomAuth.CustomPrincipal)HttpContext.Current.User);
+                    @Html.Label(string.Format("Welcome {0}", identity.Nickname))
+                    @Html.ActionLink("Log out", "LogOut", "User")
+                }
+                else
+                {
+                    @Html.ActionLink("Login", "Login", "User")
+                }
+            </span>
+        </div>
+    </div>
+
 
     <div class="container body-content">
         @RenderBody()

@@ -84,11 +84,27 @@ namespace BLL
             }
             catch (Exception ex)
             {
-                throw;
-                //return null;
+                //throw;
+                return null;
             }
 
         }
+
+        public static bool ValidateUser(string login,string password)
+        {
+            var user = BLL.Data.GetUser(Login: login);
+            if (user != null)
+            {
+                var salt = Convert.FromBase64String(user.Salt);
+                var passhash = BLL.Hash.GenerateSaltedHash(password, salt);
+
+                var oldHash = Convert.FromBase64String(user.PasswordHash);
+
+                return BLL.Hash.CompareByteArrays(passhash, oldHash);
+            }
+            return false;
+        }
+
 
     }
 }
