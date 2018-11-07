@@ -15,12 +15,6 @@ namespace InstaMvc.Models
         public string LoginName { get; set; }
         [Required]
         [DataType(DataType.Password)]
-        [MembershipPassword(
-            MinRequiredNonAlphanumericCharacters = 1,
-            MinNonAlphanumericCharactersError = "Your password needs to contain at least one symbol (!, @, #, etc).",
-            ErrorMessage = "Your password must be 6 characters long and contain at least one symbol (!, @, #, etc).",
-            MinRequiredPasswordLength = 6
-        )]
         public string Password { get; set; }
         [Required]
         [Compare("Password", ErrorMessage = "No equal")]

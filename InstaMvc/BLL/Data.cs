@@ -73,7 +73,8 @@ namespace BLL
                             Salt = dbUser.Salt,
                             SharedProfile = dbUser.SharedProfile,
                             AvatarContent = dbUser.AvatarContent,
-                            AvatarMime = dbUser.AvatarMime
+                            AvatarMime = dbUser.AvatarMime,
+                            Id=dbUser.Id,
                         };
 
                         return user;

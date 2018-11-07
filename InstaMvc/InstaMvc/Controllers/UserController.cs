@@ -78,6 +78,7 @@ namespace InstaMvc.Controllers
                         {
                             UserId = user.UserId,
                             Nickname = user.Nickname,
+                            Email = user.Email,
                         };
 
                         string userData = JsonConvert.SerializeObject(userModel);
@@ -112,13 +113,14 @@ namespace InstaMvc.Controllers
             Response.Cookies.Add(cookie);
 
             FormsAuthentication.SignOut();
-            return RedirectToAction("Login", "User", null);
+            return RedirectToAction("Index", "Home", null);
         }
 
         public ActionResult AccessDenied()
         {
             return View();
         }
+
 
     }
 }

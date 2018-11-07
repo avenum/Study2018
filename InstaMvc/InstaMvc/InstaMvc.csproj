@@ -99,6 +99,7 @@
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\Images\sobaka.jpg" />
     <Content Include="Content\Site.css" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -114,6 +115,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\UserController.cs" />
+    <Compile Include="Controllers\UserProfileController.cs" />
     <Compile Include="CustomAuth\CustomAuthorizeAttribute.cs" />
     <Compile Include="CustomAuth\CustomMembership.cs" />
     <Compile Include="CustomAuth\CustomMembershipUser.cs" />
@@ -123,6 +125,7 @@
     </Compile>
     <Compile Include="Models\LoginModel.cs" />
     <Compile Include="Models\RegistrationModel.cs" />
+    <Compile Include="Models\UserProfileModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -139,6 +142,8 @@
     <Content Include="Views\User\Login.cshtml" />
     <Content Include="Views\Home\Index2.cshtml" />
     <Content Include="Views\User\AccessDenied.cshtml" />
+    <Content Include="Views\UserProfile\Index.cshtml" />
+    <Content Include="Views\UserProfile\EditProfile.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

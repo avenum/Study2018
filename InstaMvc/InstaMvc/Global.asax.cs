@@ -33,7 +33,7 @@ namespace InstaMvc
 
                 principal.UserId = serializeModel.UserId;
                 principal.Nickname = serializeModel.Nickname;
-
+                principal.Email = serializeModel.Email;
                 HttpContext.Current.User = principal;
             }
 
