@@ -1,0 +1,27 @@
+﻿
+<script>
+
+    function Create() {
+        $.get("@Url.Action("Create")").done(function (res) {
+            $("#CreateForm").html(res);
+        });
+
+
+    }
+
+    function getFormData(selector) {
+        var $form = $(selector);
+        const unindexedArray = $form.find(':input').serializeArray();
+        const indexedArray = {};
+
+        $.map(unindexedArray, function (n) {
+            indexedArray[n.name] = n.value.trim();
+        });
+
+        return indexedArray;
+    }
+
+</script>
+
+<a href="javascript:void(0);" onclick="Create();">Create</a>
+<div id="CreateForm"></div>

@@ -42,24 +42,19 @@ namespace InstaMvc.Controllers
         {
             var user = BLL.Data.GetUser(model.Id);
 
-            //if (Request.Files != null && Request.Files.Count != 0 && Request.Files[0].ContentLength > 0)
-            // {
-            //    var file = Request.Files[0];
             if (AvatarImage != null)
             {
-                user.AvatarMime = AvatarImage.ContentType;
                 using (var binaryReader = new BinaryReader(AvatarImage.InputStream))
                 {
-                    user.AvatarContent = binaryReader.ReadBytes(AvatarImage.ContentLength);
-
+                    BLL.Data.SetAvatar(model.Id, new BLL.DTO.ImageWrapper { Content = binaryReader.ReadBytes(AvatarImage.ContentLength), Mime = AvatarImage.ContentType });
                 }
             }
-            // }
 
 
             user.LoginName = model.LoginName;
             user.Nickname = model.Nickname;
             user.SharedProfile = model.SharedProfile;
+            user.Description = model.Description;
 
             BLL.Data.CreateUpdateUser(user);
 
@@ -68,12 +63,12 @@ namespace InstaMvc.Controllers
 
         public ActionResult Avatar(long Id)
         {
-            var user = BLL.Data.GetUser(Id);
+            var avatar = BLL.Data.GetAvatar(Id);
 
-            if (user.AvatarContent == null)
+            if (avatar.Content == null)
 
                 return HttpNotFound();
-            return File(user.AvatarContent, user.AvatarMime);
+            return File(avatar.Content, avatar.Mime);
         }
 
     }

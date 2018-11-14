@@ -17,6 +17,7 @@ namespace InstaMvc
         {
             AreaRegistration.RegisterAllAreas();
             RouteConfig.RegisterRoutes(RouteTable.Routes);
+            BLL.AutoMapperConfig.RegisterMappings();
         }
 
 

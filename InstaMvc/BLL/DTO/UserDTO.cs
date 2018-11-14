@@ -26,8 +26,6 @@ namespace BLL.DTO
         public DateTime Birtdate { get; set; }
         public string Description { get; set; }
         public bool SharedProfile { get; set; }
-        public byte[] AvatarContent { get; set; }
-        public string AvatarMime { get; set; }
 
     }
 }

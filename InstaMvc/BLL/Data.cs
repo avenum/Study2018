@@ -9,34 +9,23 @@ namespace BLL
 {
     public static class Data
     {
+        static Data()
+        {
+
+        }
+
         public static long CreateUpdateUser(UserDTO user)
         {
             try
             {
                 using (var ctx = new DAL.InstaDbEntities())
                 {
-
-
-
-
-
                     var dbUser = ctx.Users.FirstOrDefault(x => x.Id == user.Id) ?? ctx.Users.Add(new DAL.User());
 
                     if (ctx.Users.Any(x => x.LoginName == user.LoginName && x.Id != dbUser.Id))
                         throw new Exception($"User with loginName :{user.LoginName} exist");
 
-
-                    dbUser.Birtdate = user.Birtdate;
-                    dbUser.Description = user.Description;
-                    dbUser.LoginName = user.LoginName;
-                    dbUser.Nickname = user.Nickname;
-                    dbUser.PasswordHash = user.PasswordHash;
-                    dbUser.RegDate = user.RegDate;
-                    dbUser.Salt = user.Salt;
-                    dbUser.SharedProfile = user.SharedProfile;
-
-                    dbUser.AvatarContent = user.AvatarContent;
-                    dbUser.AvatarMime = user.AvatarMime;
+                    AutoMapper.Mapper.Map(user, dbUser);
 
 
                     ctx.SaveChanges();
@@ -51,6 +40,39 @@ namespace BLL
             }
 
         }
+
+        public static void SetAvatar(long UserId, ImageWrapper avatar)
+        {
+            using (var ctx = new DAL.InstaDbEntities())
+            {
+                var user = ctx.Users.FirstOrDefault(x => x.Id == UserId);
+                if (user == null)
+                    throw new Exception("WATTT?");
+
+                user.AvatarContent = avatar.Content;
+                user.AvatarMime = avatar.Mime;
+
+                ctx.SaveChanges();
+            }
+        }
+
+        public static ImageWrapper GetAvatar(long UserId)
+        {
+            var res = new ImageWrapper();
+            using (var ctx = new DAL.InstaDbEntities())
+            {
+                var user = ctx.Users.FirstOrDefault(x => x.Id == UserId);
+                if (user == null)
+                    throw new Exception("User not Found");
+
+                res.Content = user.AvatarContent;
+                res.Mime = user.AvatarMime;
+            }
+
+            return res;
+            return res;
+
+        }
         public static UserDTO GetUser(long? id = null, string Login = null)
         {
             if (!id.HasValue && string.IsNullOrEmpty(Login))
@@ -59,26 +81,10 @@ namespace BLL
             {
                 using (var ctx = new DAL.InstaDbEntities())
                 {
-                    var dbUser = ctx.Users.FirstOrDefault(x => x.Id == id || x.LoginName == Login);
-                    if (dbUser != null)
-                    {
-                        var user = new UserDTO
-                        {
-                            Birtdate = dbUser.Birtdate,
-                            Description = dbUser.Description,
-                            LoginName = dbUser.LoginName,
-                            Nickname = dbUser.Nickname,
-                            PasswordHash = dbUser.PasswordHash,
-                            RegDate = dbUser.RegDate,
-                            Salt = dbUser.Salt,
-                            SharedProfile = dbUser.SharedProfile,
-                            AvatarContent = dbUser.AvatarContent,
-                            AvatarMime = dbUser.AvatarMime,
-                            Id=dbUser.Id,
-                        };
+                    var user = ctx.Users.Where(x => x.Id == id || x.LoginName == Login).Select(AutoMapper.Mapper.Map<DTO.UserDTO>).FirstOrDefault();
+                    if (user != null)
 
                         return user;
-                    }
 
                     throw new Exception($"Not found User with ID:{id}");
                 }
@@ -91,7 +97,7 @@ namespace BLL
 
         }
 
-        public static bool ValidateUser(string login,string password)
+        public static bool ValidateUser(string login, string password)
         {
             var user = BLL.Data.GetUser(Login: login);
             if (user != null)
