@@ -70,8 +70,6 @@ namespace BLL
             }
 
             return res;
-            return res;
-
         }
         public static UserDTO GetUser(long? id = null, string Login = null)
         {
@@ -112,6 +110,86 @@ namespace BLL
             return false;
         }
 
+        public static long AddImage(long UserId, ImageWrapper ImageData)
+        {
+            using (var ctx = new DAL.InstaDbEntities())
+            {
+                var img = ctx.Images.Add(new DAL.Image
+                {
+                    UserId = UserId,
+                    CreateDate = DateTime.Now,
+                    ImageContent = ImageData.Content,
+                    MimeType = ImageData.Mime,
+                });
 
+
+                ctx.SaveChanges();
+
+                return img.Id;
+            }
+        }
+
+        public static ImageWrapper GetImage(long ImageId)
+        {
+            var res = new ImageWrapper();
+            using (var ctx = new DAL.InstaDbEntities())
+            {
+                var user = ctx.Images.FirstOrDefault(x => x.Id == ImageId);
+                if (user == null)
+                    throw new Exception("Image not Found");
+
+                res.Content = user.ImageContent;
+                res.Mime = user.MimeType;
+            }
+
+            return res;
+
+        }
+
+        public static void DelImage(long ImageId)
+        {
+            using (var ctx = new DAL.InstaDbEntities())
+            {
+                var img = ctx.Images.FirstOrDefault(x => x.Id == ImageId);
+                if (img == null)
+                    throw new Exception("Нет такой фотки");
+
+                ctx.Images.Remove(img);
+
+                ctx.SaveChanges();
+            }
+
+        }
+        public static List<long> GetMyImagesIds(long UserId)
+        {
+            var res = new List<long>();
+            using (var ctx = new DAL.InstaDbEntities())
+            {
+                res.AddRange(ctx.Images.Where(x => x.UserId == UserId && !x.PostId.HasValue).Select(x => x.Id));
+
+            }
+
+            return res;
+        }
+
+        public static void CreatePost(PostDTO post)
+        {
+            using (var ctx = new DAL.InstaDbEntities())
+            {
+                var imgIds = post.Images.Select(x => x.Id).ToArray();
+                var images = ctx.Images.Where(x => imgIds.Contains(x.Id)).ToList();
+
+                var dbPost = AutoMapper.Mapper.Map<DAL.Post>(post);
+
+                dbPost.Images.Clear();
+                images.ForEach((x) => dbPost.Images.Add(x));
+                dbPost.CreateDate = DateTime.Now;
+                
+
+
+                ctx.Posts.Add(dbPost);
+                ctx.SaveChanges();
+            }
+        }
     }
 }

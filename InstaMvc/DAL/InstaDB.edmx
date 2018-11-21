@@ -298,7 +298,6 @@
           <Property Name="CreateDate" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="Description" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
           <Property Name="UserId" Type="Int64" Nullable="false" />
-          <Property Name="Position" Type="Geography" />
           <Property Name="LocationName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="PublicateDate" Type="DateTime" Precision="3" />
           <NavigationProperty Name="Comments" Relationship="Self.FK_Comments_Posts" FromRole="Posts" ToRole="Comments" />
@@ -565,7 +564,6 @@
                 <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
                 <ScalarProperty Name="Description" ColumnName="Description" />
                 <ScalarProperty Name="UserId" ColumnName="UserId" />
-                <ScalarProperty Name="Position" ColumnName="Position" />
                 <ScalarProperty Name="LocationName" ColumnName="LocationName" />
                 <ScalarProperty Name="PublicateDate" ColumnName="PublicateDate" />
               </MappingFragment>

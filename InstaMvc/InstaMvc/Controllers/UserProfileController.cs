@@ -44,10 +44,7 @@ namespace InstaMvc.Controllers
 
             if (AvatarImage != null)
             {
-                using (var binaryReader = new BinaryReader(AvatarImage.InputStream))
-                {
-                    BLL.Data.SetAvatar(model.Id, new BLL.DTO.ImageWrapper { Content = binaryReader.ReadBytes(AvatarImage.ContentLength), Mime = AvatarImage.ContentType });
-                }
+                BLL.Data.SetAvatar(model.Id, new BLL.DTO.ImageWrapper(AvatarImage));
             }
 
 

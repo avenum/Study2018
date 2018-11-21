@@ -1,46 +1,134 @@
 ﻿@model BLL.DTO.PostDTO
 
+<style>
+    .Img_Preview {
+        max-width: 150px;
+        max-height: 150px;
+        border-radius: 15px;
+        cursor: crosshair;
+    }
+
+        .Img_Preview:hover {
+            border: 2px dashed red;
+        }
+</style>
 <script>
 
     function Saveform() {
 
         var fd = getFormData(".nashaForma");
 
+
+        var images = $.map($(".Img_Preview"), function (item,i) {
+            return { Id:$(item).data('image-id') };
+        });
+
+        fd["Images"] = images;
+
+
         $.post('@Url.Action("Create")', fd).done(function (res) {
 
-            console.log(res);
+
 
         });
 
     }
+
+
+    function UploadImage(elem) {
+        Loader.show();
+
+
+        var files = $(elem).prop('files');
+        if (files.length) {
+            var data = new FormData();
+            data.append('imageData', files[0]);
+
+
+            $.ajax({
+                url: '@Url.Action("UploadImages")',
+                data: data,
+                processData: false,
+                contentType: false,
+                type: 'POST'
+            }).done(function (res) {
+
+                if (res.Success) {
+                    $("#PicturesDiv").append("<img src='@Url.Action("GetImage")/" + res.Result + "'  class='Img_Preview'  data-image-id='" + res.Result + "'/>")
+
+
+                    var html = $(elem).parent().html();
+                    $(elem).parent().html(html);
+                }
+                Loader.hide();
+
+            });
+
+        }
+    }
+
+
+    $(document).off("click", ".Img_Preview");
+
+    $(document).on("click", ".Img_Preview", function () {
+        var $elem = $(this);
+
+        var id = $elem.data("image-id");
+
+        $.post('@Url.Action("DelImage")', { id: id }).done(function (res) {
+            if (res.Success) {
+
+                $("[data-image-id='" + id + "']").remove();
+
+            } else {
+                alert(res.Result);
+            }
+
+
+        });
+    });
 </script>
-    
-    <div class="form-horizontal nashaForma">
-        <h4>PostDTO</h4>
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.LocationName, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.LocationName, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.LocationName, "", new { @class = "text-danger" })
-            </div>
-        </div>
+<div id="PicturesDiv">
+    @if (ViewBag.Images is List<long> Images)
+    {
+        foreach (var imgId in Images)
+        {
+            <img src="@Url.Action("GetImage")/@imgId" class="Img_Preview" data-image-id="@imgId" />
+        }
+    }
+</div>
+<div id="PictureUpload">
+    <input type="file" name="AvatarImage" onchange="UploadImage(this);" class="form-control" accept=".jpg,.png,.gif" />
+</div>
 
 
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="button" value="Create" onclick="Saveform(); return false;" class="btn btn-default" />
-            </div>
+<div class="form-horizontal nashaForma">
+    <h4>PostDTO</h4>
+    <hr />
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
         </div>
     </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.LocationName, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.LocationName, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.LocationName, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="button" value="Create" onclick="Saveform(); return false;" class="btn btn-default" />
+        </div>
+    </div>
+</div>
 

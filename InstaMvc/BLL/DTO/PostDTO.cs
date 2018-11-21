@@ -13,7 +13,7 @@ namespace BLL.DTO
         public DateTime CreateDate { get; set; }
         public string Description { get; set; }
         public long UserId { get; set; }
-        public DbGeography Position { get; set; }
+        //public DbGeography Position { get; set; }
         public string LocationName { get; set; }
         public DateTime? PublicateDate { get; set; }
 

@@ -2,11 +2,12 @@
 <script>
 
     function Create() {
+        Loader.show();
+
         $.get("@Url.Action("Create")").done(function (res) {
             $("#CreateForm").html(res);
+            Loader.hide();
         });
-
-
     }
 
     function getFormData(selector) {
@@ -24,4 +25,6 @@
 </script>
 
 <a href="javascript:void(0);" onclick="Create();">Create</a>
-<div id="CreateForm"></div>
+<div id="CreateForm">
+    
+</div>
