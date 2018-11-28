@@ -179,17 +179,59 @@ namespace BLL
                 var imgIds = post.Images.Select(x => x.Id).ToArray();
                 var images = ctx.Images.Where(x => imgIds.Contains(x.Id)).ToList();
 
+                if (images.Any(x => x.PostId.HasValue))
+                    throw new Exception("Это чужие картинки!!!");
+
                 var dbPost = AutoMapper.Mapper.Map<DAL.Post>(post);
 
                 dbPost.Images.Clear();
                 images.ForEach((x) => dbPost.Images.Add(x));
                 dbPost.CreateDate = DateTime.Now;
-                
+
 
 
                 ctx.Posts.Add(dbPost);
                 ctx.SaveChanges();
             }
+        }
+
+        public static PostDTO GetPostById(long id)
+        {
+            var res = (PostDTO)null;
+            using (var ctx = new DAL.InstaDbEntities())
+            {
+                res = ctx.Posts.Where(x => x.Id == id).Select(AutoMapper.Mapper.Map<PostDTO>).FirstOrDefault();
+            }
+
+            return res;
+        }
+        public static List<PostDTO> GetPosts(int page = 0, long? userId = null)
+        {
+            var take = 3;
+            var skip = take * page;
+            var res = (List<PostDTO>)null;
+            using (var ctx = new DAL.InstaDbEntities())
+            {
+                var temp = ctx.Posts.Where(x => !userId.HasValue && x.PublicateDate.HasValue || userId.HasValue && x.UserId == userId.Value);
+
+                res = temp.OrderByDescending(x => x.PublicateDate).ThenByDescending(x => x.CreateDate).Skip(skip).Take(take).Select(AutoMapper.Mapper.Map<PostDTO>).ToList();
+            }
+
+            return res;
+        }
+
+        public static void PublishPost(long id)
+        {
+            using (var ctx = new DAL.InstaDbEntities())
+            {
+                var post = ctx.Posts.FirstOrDefault(x => x.Id == id);
+                if (post != null)
+                {
+                    post.PublicateDate = DateTime.Now;
+                    ctx.SaveChanges();
+                }
+            }
+
         }
     }
 }

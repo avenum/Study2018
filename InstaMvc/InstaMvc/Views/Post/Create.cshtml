@@ -1,17 +1,5 @@
 ﻿@model BLL.DTO.PostDTO
 
-<style>
-    .Img_Preview {
-        max-width: 150px;
-        max-height: 150px;
-        border-radius: 15px;
-        cursor: crosshair;
-    }
-
-        .Img_Preview:hover {
-            border: 2px dashed red;
-        }
-</style>
 <script>
 
     function Saveform() {
@@ -27,8 +15,10 @@
 
 
         $.post('@Url.Action("Create")', fd).done(function (res) {
-
-
+            if (res.Success)
+                InitForm();
+            else
+                alert(res.Result);
 
         });
 

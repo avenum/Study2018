@@ -1,0 +1,25 @@
+﻿@model BLL.DTO.PostDTO
+
+<div class="PostDiv">
+    <div class="ImgDiv">
+        @foreach (var image in Model.Images)
+        {
+            <img src='@Url.Action("GetImage")/@image.Id' class='Img_Preview' />
+        }
+    </div>
+    <hr />
+    <div>
+        @Model.Description<br />
+        @Model.LocationName
+    </div>
+    <div>
+        @if (!Model.PublicateDate.HasValue)
+        {
+            <a href="javascript:void(0);" onclick="PublishPost('@Model.Id', this)">publish</a>
+        }
+        else
+        {
+            <text>@Model.PublicateDate.ToString()</text>
+        }
+    </div>
+</div>

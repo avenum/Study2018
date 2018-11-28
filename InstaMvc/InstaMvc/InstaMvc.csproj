@@ -127,6 +127,7 @@
     </Compile>
     <Compile Include="Models\JsonResultResponse.cs" />
     <Compile Include="Models\LoginModel.cs" />
+    <Compile Include="Models\PostsModel.cs" />
     <Compile Include="Models\RegistrationModel.cs" />
     <Compile Include="Models\UserProfileModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -150,6 +151,8 @@
     <Content Include="Views\UserProfile\EditProfile.cshtml" />
     <Content Include="Views\Post\Create.cshtml" />
     <Content Include="Views\Post\Index.cshtml" />
+    <Content Include="Views\Post\_PostView.cshtml" />
+    <Content Include="Views\Post\_MorePostsView.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

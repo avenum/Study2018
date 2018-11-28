@@ -12,16 +12,46 @@ namespace InstaMvc
 
     public class PostController : Controller
     {
+        private long? _currentUserId { get { return ((CustomAuth.CustomPrincipal)User)?.UserId; } }
         // GET: Post
         public ActionResult Index()
         {
-            return View();
+            var model = new Models.PostsModel { FormMode = PostFormMode.all };
+            model.Posts = BLL.Data.GetPosts();
+
+            model.NextExist = BLL.Data.GetPosts(1).Any();
+
+            return View(model);
+        }
+        public ActionResult My()
+        {
+            var model = new Models.PostsModel { FormMode = PostFormMode.my };
+            model.Posts = BLL.Data.GetPosts(userId: _currentUserId);
+            model.NextExist = BLL.Data.GetPosts(1, _currentUserId).Any();
+            return View("Index", model);
+        }
+
+        [HttpPost]
+        public JsonResult PublishPost(long id)
+        {
+            var result = new JsonResultResponse { Success = true };
+            try
+            {
+                BLL.Data.PublishPost(id);
+            }
+            catch (Exception ex)
+            {
+                result.Success = false;
+                result.Result = ex.Message;
+            }
+            return Json(result);
+
         }
 
         [HttpGet]
         public PartialViewResult Create()
         {
-            ViewBag.Images = BLL.Data.GetMyImagesIds(((CustomAuth.CustomPrincipal)User).UserId);
+            ViewBag.Images = BLL.Data.GetMyImagesIds(_currentUserId.Value);
 
 
 
@@ -33,14 +63,9 @@ namespace InstaMvc
             var result = new JsonResultResponse { Success = true };
             try
             {
-
-                model.UserId = ((CustomAuth.CustomPrincipal)User).UserId;
+                model.UserId = _currentUserId.Value;
 
                 BLL.Data.CreatePost(model);
-
-
-
-
             }
             catch (Exception ex)
             {
@@ -63,7 +88,7 @@ namespace InstaMvc
                 {
                     var file = Request.Files[0];
 
-                    var userId = ((CustomAuth.CustomPrincipal)User).UserId;
+                    var userId = _currentUserId.Value;
 
                     result.Result = BLL.Data.AddImage(userId, new BLL.DTO.ImageWrapper(file));
                 }
@@ -105,6 +130,21 @@ namespace InstaMvc
             }
             return Json(result);
 
+        }
+
+        public PartialViewResult GetPosts(int page, bool my = false)
+        {
+            var model = new Models.PostsModel { FormMode = my ? PostFormMode.my : PostFormMode.all };
+            model.Posts = BLL.Data.GetPosts(page, my ? _currentUserId : null);
+            model.NextExist = BLL.Data.GetPosts(page + 1, my ? _currentUserId : null).Any();
+
+            return PartialView("_MorePostsView", model);
+        }
+
+        public PartialViewResult GetPost(long id)
+        {
+            var model = BLL.Data.GetPostById(id);
+            return PartialView("_PostView", model);
         }
 
     }

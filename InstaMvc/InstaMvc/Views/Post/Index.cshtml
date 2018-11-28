@@ -1,5 +1,20 @@
-﻿
+﻿@model InstaMvc.Models.PostsModel
 <script>
+    var formIsMy = '@(Model.FormMode==InstaMvc.Models.PostFormMode.my?1:0)' == '1';
+    var currentPage = 0;
+   function InitForm() {
+        $("#CreateForm").html("");
+    }
+
+    function NextPage() {
+        var nextPage = currentPage +1;
+        Loader.show();
+        $.get("@Url.Action("GetPosts")", { page: nextPage, my: formIsMy }).done(function (res) {
+            Loader.hide();
+            $("#MainContainer").append(res);
+            currentPage = nextPage;
+        });
+    }
 
     function Create() {
         Loader.show();
@@ -22,9 +37,69 @@
         return indexedArray;
     }
 
+    function PublishPost(id, elem) {
+       var currentEl= $(elem).parents(".PostDiv");
+        Loader.show();
+
+        $.post('@Url.Action("PublishPost")', { id: id }).done(function (res) {
+            if (res.Success)
+
+                $.get("@Url.Action("GetPost")", { id: id }).done(function (res2) {
+                    currentEl.before(res2);
+                    currentEl.remove()
+                });
+
+
+
+            else
+                alert(res.Result);
+
+
+            Loader.hide();
+
+        });
+
+
+    }
+
+    function ExistInit(a) {
+        if (a == '0') {
+            $(".next_link").hide();
+        }
+    }
+
+
 </script>
+<style>
+    .Img_Preview {
+        max-width: 150px;
+        max-height: 150px;
+        border-radius: 15px;
+        cursor: crosshair;
+    }
+
+        .Img_Preview:hover {
+            border: 2px dashed red;
+        }
+
+    .PostDiv{
+        border:2px blue solid;
+    }
+</style>
 
 <a href="javascript:void(0);" onclick="Create();">Create</a>
 <div id="CreateForm">
-    
+
 </div>
+
+<div id="MainContainer">
+    @foreach (var post in Model.Posts)
+    {
+        Html.RenderPartial("_PostView", post);
+    }
+
+</div>
+@if (Model.NextExist)
+{
+    <a href="javascript:void(0);" class="next_link" onclick="NextPage()">Next...</a>
+}
