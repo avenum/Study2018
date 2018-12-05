@@ -194,6 +194,32 @@ namespace BLL
                 ctx.SaveChanges();
             }
         }
+        public static long CreateComment(CommentDTO com)
+        {
+            using (var ctx = new DAL.InstaDbEntities())
+            {
+                var dbCom = AutoMapper.Mapper.Map<DAL.Comment>(com);
+
+                ctx.Comments.Add(dbCom);
+                ctx.SaveChanges();
+
+                return dbCom.Id;
+            }
+        }
+
+        public static CommentDTO GetComment(long id)
+        {
+            using (var ctx = new DAL.InstaDbEntities())
+            {
+                var ct = ctx.Comments
+                    .Where(x => x.Id == id)
+                    .Select(AutoMapper.Mapper.Map<CommentDTO>)
+                    .FirstOrDefault();
+
+                return ct;
+            }
+        }
+
 
         public static PostDTO GetPostById(long id)
         {

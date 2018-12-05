@@ -16,7 +16,9 @@ namespace BLL
                 cfg.CreateMap<DAL.User, DTO.UserDTO>();
                 cfg.CreateMap<DAL.Post, DTO.PostDTO>();
                 cfg.CreateMap<DAL.Image, DTO.ImageDTO>();
-                cfg.CreateMap<DAL.Comment, DTO.CommentDTO>();
+                cfg.CreateMap<DAL.Comment, DTO.CommentDTO>()
+                .ForMember(x => x.UserNickname, y => y.MapFrom(x => x.User.Nickname))
+                .ForMember(x => x.DateString, y => y.MapFrom(x => x.Date.ToString("dd.MM.yyyy HH:mm")));
                 cfg.CreateMap<DAL.Like, DTO.LikeDTO>();
                 cfg.CreateMap<DAL.PostTag, DTO.PostTagDTO>();
                 cfg.CreateMap<DTO.UserDTO, DAL.User>();

@@ -1,4 +1,7 @@
 ﻿@model InstaMvc.Models.PostsModel
+<script type="text/template" id="ComTemplate">
+    @Html.Raw(Html.Partial("_commentTemplate"))
+</script>
 <script>
     var formIsMy = '@(Model.FormMode==InstaMvc.Models.PostFormMode.my?1:0)' == '1';
     var currentPage = 0;
@@ -43,14 +46,10 @@
 
         $.post('@Url.Action("PublishPost")', { id: id }).done(function (res) {
             if (res.Success)
-
                 $.get("@Url.Action("GetPost")", { id: id }).done(function (res2) {
                     currentEl.before(res2);
                     currentEl.remove()
                 });
-
-
-
             else
                 alert(res.Result);
 
@@ -61,6 +60,11 @@
 
 
     }
+    function RenderCommentHtml(data) {
+        var temp = $("#ComTemplate").html();
+        var template = Hogan.compile(temp);
+        return template.render(data);
+    }
 
     function ExistInit(a) {
         if (a == '0') {
@@ -68,7 +72,68 @@
         }
     }
 
+    $(function () {
+        $(document).on("click", ".AddCommentButton", AddCommentButtonClick)
+        $(document).on("click", ".SendCommentText", SendCommentTextClick)
+        $(document).on("click", ".ViewCommentsButton", ViewCommentsButtonClick)
 
+
+
+    });
+
+
+    function AddCommentButtonClick(e) {
+        e.preventDefault();
+        $(".AddCommentButton").show();
+        $(this).hide();
+
+        $(".AddComentDiv").hide();
+        $(this).parents(".PostDiv").find(".AddComentDiv").show();
+    }
+    function SendCommentTextClick(e) {
+        e.preventDefault();
+        Loader.show();
+
+        var post = $(this).parents(".PostDiv");
+        var comInput = $(this).parent().find(".CommentText");
+        var postId = post.data("post-id");
+
+        $.post('@Url.Action("AddComment")', { postId: postId, commentText: comInput.val() }).done((res) => {
+            if (res.Success) {
+                post.find(".commentDiv").append(RenderCommentHtml({ Comments: [res.Result] }))
+                comInput.val('');
+                $(".AddCommentButton").show();
+                $(".AddComentDiv").hide();
+
+            }
+
+
+        }).always(() => { Loader.hide(); });
+    }
+
+    function ViewCommentsButtonClick(e) {
+        e.preventDefault();
+        var post = $(this).parents(".PostDiv");
+
+        if ($(this).data("toogle") == "view") {
+            Loader.show();
+            var postId = post.data("post-id");
+            $.get('@Url.Action("GetComments")/' + postId).done((res) => {
+                post.find(".commentDiv").html(RenderCommentHtml(res))
+            }).always(() => { Loader.hide(); });
+
+
+            $(this).data("toogle","hide");
+            $(this).text("HideComments");
+        }
+        else {
+            var lastComment = post.find(".commentDiv :last-child.comm");
+            post.find(".commentDiv").html(lastComment);
+            $(this).data("toogle", "view");
+            $(this).text("ViewComment");
+
+        }
+    }
 </script>
 <style>
     .Img_Preview {
@@ -82,8 +147,8 @@
             border: 2px dashed red;
         }
 
-    .PostDiv{
-        border:2px blue solid;
+    .PostDiv {
+        border: 2px blue solid;
     }
 </style>
 

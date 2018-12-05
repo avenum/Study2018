@@ -147,5 +147,34 @@ namespace InstaMvc
             return PartialView("_PostView", model);
         }
 
+        public JsonResult GetComments(long id)
+        {
+            var model = BLL.Data.GetPostById(id);
+            return Json(new { model.Comments },JsonRequestBehavior.AllowGet);
+        }
+
+
+        [HttpPost]
+        public JsonResult AddComment(long postId, string commentText)
+        {
+            var result = new JsonResultResponse { Success = true };
+            try
+            {
+                var userId = _currentUserId.Value;
+
+                var comId = BLL.Data.CreateComment(new BLL.DTO.CommentDTO { UserId = userId, CommentText = commentText, PostId = postId, Date = DateTime.Now });
+
+
+                result.Result = BLL.Data.GetComment(comId);
+
+            }
+            catch (Exception ex)
+            {
+                result.Success = false;
+                result.Result = ex.Message;
+            }
+            return Json(result);
+        }
+
     }
 }

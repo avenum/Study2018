@@ -1,6 +1,5 @@
 ﻿@model BLL.DTO.PostDTO
-
-<div class="PostDiv">
+<div class="PostDiv" data-post-id="@Model.Id">
     <div class="ImgDiv">
         @foreach (var image in Model.Images)
         {
@@ -21,5 +20,14 @@
         {
             <text>@Model.PublicateDate.ToString()</text>
         }
+    </div>    
+    <button class="ViewCommentsButton" data-toogle="view">ViewComments</button>
+    <div class="commentDiv">
+        @Html.Raw(Nustache.Core.Render.StringToString(Html.Partial("_commentTemplate").ToString(), new { Comments = Model.Comments.OrderByDescending(x => x.Date).Take(1) }))
     </div>
+    <div class="AddComentDiv" style="display:none">
+        <textarea class="CommentText"></textarea>
+        <button class="SendCommentText">Send</button>
+    </div>
+    <button class="AddCommentButton">AddComent</button>
 </div>
